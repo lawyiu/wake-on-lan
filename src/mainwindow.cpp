@@ -108,10 +108,16 @@ void MainWindow::ui_updateProfileSettings(QString currentProfile) {
 
   QString ip = settings->value("ip").toString();
   ui->IP_lineEdit->setText(ip);
+
   QString mac = settings->value("MAC").toString();
   ui->MAC_lineEdit->setText(mac);
+
   QString port = settings->value("port").toString();
-  ui->portLineEdit->setText(port);
+  if (!port.isEmpty()) {
+    ui->portLineEdit->setText(port);
+  } else {
+    ui->portLineEdit->setText("9");
+  }
 
   settings->endGroup();
   settings->endGroup();
