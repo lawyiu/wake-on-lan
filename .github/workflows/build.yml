@@ -43,7 +43,7 @@ jobs:
           cd build/Release/
           mkdir wake_on_lan
           mv wake_on_lan.exe wake_on_lan/
-          windeployqt wake_on_lan/wake_on_lan.exe
+          windeployqt --release --no-translations --no-system-d3d-compiler --no-opengl-sw wake_on_lan/wake_on_lan.exe
           Compress-Archive -Path wake_on_lan/ -DestinationPath wake_on_lan-${{ env.SHORT_SHA }}.zip
 
       - name: Release
