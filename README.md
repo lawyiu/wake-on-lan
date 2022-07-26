@@ -8,4 +8,4 @@ An application to send magic packets to start up or wake up computers over a loc
 2. `cd wake-on-lan`
 3. `mkdir build && cd build`
 4. `cmake ..` or `qmake ..`
-5. `make`
+5. `msbuild wake_on_lan.sln` for cmake or `nmake` for qmake
