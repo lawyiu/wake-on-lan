@@ -1,4 +1,4 @@
-name: Build and Release for Windows
+name: CI/CD for Windows
 
 on: push
 
@@ -7,6 +7,23 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Get Npm global packages path
+        id: npm-pkg-path
+        run: echo "pkg-path=$(npm root -g)" >> $env:GITHUB_OUTPUT
+
+      - name: Cache Appium
+        id: cache-appium
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.npm-pkg-path.outputs.pkg-path }}
+          key: ${{ runner.os }}-appium@2.0.0-beta.46
+
+      - name: Install Appium
+        if: steps.cache-appium.outputs.cache-hit != 'true'
+        run: |
+          npm install -g appium@2.0.0-beta.46
+          appium driver install windows
+
       - name: Setup MSVC environment
         uses: ilammy/msvc-dev-cmd@d8610e2b41c6d0f0c3b4c46dad8df0fd826c68e1 #v1
 
@@ -38,6 +55,26 @@ jobs:
           mv wake_on_lan.exe wake_on_lan/
           windeployqt --release --no-translations --no-system-d3d-compiler --no-opengl-sw wake_on_lan/wake_on_lan.exe
           Compress-Archive -Path wake_on_lan/ -DestinationPath wake_on_lan-${{ env.SHORT_SHA }}.zip
+
+      - name: Set path to WOL program
+        run: echo PROG_PATH=${{ github.workspace }}/build/Release/wake_on_lan/wake_on_lan.exe >> $env:GITHUB_ENV
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '11'
+
+      - name: Run Appium tests
+        run: |
+          cd tests/
+          ./gradlew test
+
+      - uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: test-results
+          path: tests/build/test-results/test/*.xml
 
       - name: Release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 #v1
