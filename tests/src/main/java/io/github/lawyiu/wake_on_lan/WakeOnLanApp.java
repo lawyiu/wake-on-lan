@@ -3,6 +3,8 @@ package io.github.lawyiu.wake_on_lan;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.Keys;
 
 import io.appium.java_client.AppiumBy;
 
@@ -49,7 +51,15 @@ public class WakeOnLanApp {
 
     protected final By byProfileComboBox = AppiumBy
             .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileNameComboBox");
-    protected WebElement profileComboBoxElm;
+    protected final WebElement profileComboBoxElm;
+
+    protected final By bySaveProfileBtn = AppiumBy
+            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileSaveButton");
+    protected final WebElement saveProfileBtnElm;
+
+    protected final By byDeleteProfileBtn = AppiumBy
+            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileDeleteButton");
+    protected final WebElement deleteProfileBtnElm;
 
     public static class SendOptions {
         protected String IPaddr;
@@ -88,6 +98,8 @@ public class WakeOnLanApp {
         portfieldElm = driver.findElement(byPortfield);
         sendBtnElm = driver.findElement(bySendBtn);
         profileComboBoxElm = driver.findElement(byProfileComboBox);
+        saveProfileBtnElm = driver.findElement(bySaveProfileBtn);
+        deleteProfileBtnElm = driver.findElement(byDeleteProfileBtn);
     }
 
     public String getTitle() {
@@ -106,7 +118,51 @@ public class WakeOnLanApp {
     public void fillInProfileField(String profileName) {
         sendTabElm.click();
         profileComboBoxElm.click();
+        profileComboBoxElm.sendKeys(Keys.CONTROL + "a" + Keys.BACK_SPACE);
         profileComboBoxElm.sendKeys(profileName);
+    }
+
+    public String getProfileFieldText() {
+        return profileComboBoxElm.getText();
+    }
+
+    public void resetProfileFieldToFirstItem() {
+        sendTabElm.click();
+        profileComboBoxElm.click();
+
+        String prevText;
+        String currText = getProfileFieldText();
+
+        do {
+            prevText = currText;
+            profileComboBoxElm.sendKeys(Keys.UP);
+            currText = getProfileFieldText();
+        } while (!currText.equals(prevText));
+    }
+
+    public void selectProfile(String profile_text) {
+        resetProfileFieldToFirstItem();
+
+        String prevText;
+        String currText = getProfileFieldText();
+
+        while (!profile_text.equals(currText)) {
+            prevText = currText;
+            profileComboBoxElm.sendKeys(Keys.DOWN);
+            currText = getProfileFieldText();
+
+            if (currText.equals(prevText)) {
+                throw new NotFoundException("Could not find profile: " + profile_text);
+            }
+        }
+    }
+
+    public void selectProfileIndex(int index) {
+        resetProfileFieldToFirstItem();
+
+        for (int i = 0; i < index; i++) {
+            profileComboBoxElm.sendKeys(Keys.DOWN);
+        }
     }
 
     public void fillInIPfield(String IPaddr) {
@@ -116,6 +172,10 @@ public class WakeOnLanApp {
         IPfieldElm.sendKeys(IPaddr);
     }
 
+    public String getIPfieldText() {
+        return IPfieldElm.getText();
+    }
+
     public void fillInMACfield(String MACaddr) {
         sendTabElm.click();
         MACfieldElm.clear();
@@ -123,11 +183,29 @@ public class WakeOnLanApp {
         MACfieldElm.sendKeys(MACaddr);
     }
 
+    public String getMACfieldText() {
+        return MACfieldElm.getText();
+    }
+
     public void fillInPortField(int port) {
         sendTabElm.click();
         portfieldElm.clear();
         portfieldElm.click();
         portfieldElm.sendKeys(String.valueOf(port));
+    }
+
+    public int getPortFieldNumber() {
+        return Integer.valueOf(portfieldElm.getText());
+    }
+
+    public void clickSaveProfileButton() {
+        sendTabElm.click();
+        saveProfileBtnElm.click();
+    }
+
+    public void clickDeleteProfileButton() {
+        sendTabElm.click();
+        deleteProfileBtnElm.click();
     }
 
     public void send(SendOptions options) {
