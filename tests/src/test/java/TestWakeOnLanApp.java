@@ -10,7 +10,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
@@ -73,7 +72,6 @@ class TestWakeOnLanApp {
         app = new WakeOnLanApp(driver);
     }
 
-    @Disabled("This test does not pass on CI but passes locally.")
     @Test
     void clickingCloseButtonInTitleBarShouldCloseApp() {
         app.clickTitleBarCloseButton();
@@ -81,7 +79,6 @@ class TestWakeOnLanApp {
         assertThrows(NoSuchWindowException.class, () -> app.getTitle());
     }
 
-    @Disabled("This test does not pass on CI but passes locally.")
     @Test
     void clickingCloseButtonShouldCloseApp() {
         app.clickCloseButton();
@@ -89,7 +86,6 @@ class TestWakeOnLanApp {
         assertThrows(NoSuchWindowException.class, () -> app.getTitle());
     }
 
-    @Disabled("This test does not pass on CI but passes locally.")
     @Test
     void loopbackTest() {
         String loopbackIP = "127.0.0.1";
@@ -113,7 +109,6 @@ class TestWakeOnLanApp {
                         outputText));
     }
 
-    @Disabled("This test does not pass on CI but passes locally.")
     @Test
     void emptySendShouldShowErrorMessageAlert() {
         app.clickSendButton();
@@ -234,7 +229,6 @@ class TestWakeOnLanApp {
         assertEquals(9, app.getPortFieldNumber());
     }
 
-    @Disabled("This test does not pass on CI but passes locally.")
     @Test
     void switchingProfilesShouldSwitchFieldsContent() {
         String testProfileName0 = "profile 0";
