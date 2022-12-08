@@ -7,19 +7,18 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Get Npm global packages path
-        id: npm-pkg-path
-        run: echo "pkg-path=$(npm root -g)" >> $env:GITHUB_OUTPUT
+      - name: Get Npm cache path
+        id: npm-cache-path
+        run: echo "cache-path=$(npm get cache)" >> $env:GITHUB_OUTPUT
 
-      - name: Cache Appium
+      - name: Cache Appium dependencies
         id: cache-appium
         uses: actions/cache@v3
         with:
-          path: ${{ steps.npm-pkg-path.outputs.pkg-path }}
+          path: ${{ steps.npm-cache-path.outputs.cache-path }}
           key: ${{ runner.os }}-appium@2.0.0-beta.46
 
       - name: Install Appium
-        if: steps.cache-appium.outputs.cache-hit != 'true'
         run: |
           npm install -g appium@2.0.0-beta.46
           appium driver install windows
