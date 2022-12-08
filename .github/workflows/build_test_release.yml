@@ -22,7 +22,9 @@ jobs:
         if: steps.cache-appium.outputs.cache-hit != 'true'
         run: |
           npm install -g appium@2.0.0-beta.46
-          appium driver install windows
+
+      - name: Install Appium windows driver
+        run: appium driver install windows
 
       - name: Setup MSVC environment
         uses: ilammy/msvc-dev-cmd@d8610e2b41c6d0f0c3b4c46dad8df0fd826c68e1 #v1
