@@ -4,6 +4,7 @@ import org.openqa.selenium.NoSuchWindowException;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.windows.WindowsDriver;
+import io.appium.java_client.windows.WindowsStartScreenRecordingOptions;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -11,12 +12,16 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Set;
+import java.util.Base64;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import io.github.lawyiu.wake_on_lan.WakeOnLanApp;
@@ -62,6 +67,9 @@ class TestWakeOnLanApp {
         caps.setCapability("appium:deviceName", "WindowsPC");
         caps.setCapability("appium:app", prog_path);
         driver = new WindowsDriver(service.getUrl(), caps);
+
+        driver.startRecordingScreen(new WindowsStartScreenRecordingOptions().disableForcedRestart());
+
         app = new WakeOnLanApp(driver);
     }
 
@@ -267,8 +275,16 @@ class TestWakeOnLanApp {
     }
 
     @AfterEach
-    void tearDown() throws IOException {
+    void tearDown(TestInfo testInfo) throws IOException {
         Files.deleteIfExists(settingsPath);
+
+        String vidData = driver.stopRecordingScreen();
+        byte[] decodedVid = Base64.getDecoder().decode(vidData);
+
+        FileOutputStream fsOut = new FileOutputStream(testInfo.getDisplayName() + ".mp4");
+        fsOut.write(decodedVid);
+        fsOut.close();
+
         driver.quit();
     }
 

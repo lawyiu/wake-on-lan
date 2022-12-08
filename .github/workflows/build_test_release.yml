@@ -75,6 +75,12 @@ jobs:
           name: test-results
           path: tests/build/test-results/test/*.xml
 
+      - uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: Upload videos
+          path: tests/*.mp4
+
       - name: Release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 #v1
         if: startsWith(github.ref, 'refs/tags/')
