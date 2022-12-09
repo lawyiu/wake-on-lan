@@ -35,7 +35,7 @@ jobs:
       - name: Install QT
         uses: jurplel/install-qt-action@43ec12788e42f375acfcb2cec059edfb9572fbaa #v3
         with:
-          version: 6.3.1
+          version: 6.*
           cache: true
 
       - name: Make build directory
