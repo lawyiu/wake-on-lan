@@ -2,64 +2,56 @@ package io.github.lawyiu.wake_on_lan;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.Keys;
 
-import io.appium.java_client.AppiumBy;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import io.appium.java_client.pagefactory.WindowsFindBy;
 
 public class WakeOnLanApp {
     protected String appTitle;
     protected final WebDriver driver;
 
-    protected final By byTitleBarCloseBtn = By.xpath("/Window/TitleBar/Button[3]");
-    protected final WebElement titleBarCloseBtnElm;
+    @FindBy(xpath= "/Window/TitleBar/Button[3]")
+    protected WebElement titleBarCloseBtnElm;
 
-    protected final By byCloseBtn = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.closeButton");
-    protected final WebElement closeBtnElm;
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.closeButton")
+    protected WebElement closeBtnElm;
 
-    protected final By bySendTab = By.xpath("/Window/Group/Group/Tab/TabItem[1]");
-    protected final WebElement sendTabElm;
+    @FindBy(xpath= "/Window/Group/Group/Tab/TabItem[1]")
+    protected WebElement sendTabElm;
 
-    protected final By byReceiveTab = By.xpath("/Window/Group/Group/Tab/TabItem[2]");
-    protected final WebElement receiveTabElm;
+    @FindBy(xpath= "/Window/Group/Group/Tab/TabItem[2]")
+    protected WebElement receiveTabElm;
 
-    protected final By byIPfield = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.IP_lineEdit");
-    protected final WebElement IPfieldElm;
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.IP_lineEdit")
+    protected WebElement IPfieldElm;
 
-    protected final By byMACfield = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.MAC_lineEdit");
-    protected final WebElement MACfieldElm;
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.MAC_lineEdit")
+    protected WebElement MACfieldElm;
 
-    protected final By byPortfield = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.portLineEdit");
-    protected final WebElement portfieldElm;
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.portLineEdit")
+    protected WebElement portfieldElm;
 
-    protected final By bySendBtn = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.sendButton");
-    protected final WebElement sendBtnElm;
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.sendButton")
+    protected WebElement sendBtnElm;
 
-    protected final By byStartStopBtn = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.startButton");
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.startButton")
     protected WebElement startStopBtnElm;
 
-    protected final By byReceiveOutputTextField = AppiumBy.accessibilityId(
-            "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.packetInfoTextEdit");
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.packetInfoTextEdit")
     protected WebElement receiveOutputTextField;
 
-    protected final By byProfileComboBox = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileNameComboBox");
-    protected final WebElement profileComboBoxElm;
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileNameComboBox")
+    protected WebElement profileComboBoxElm;
 
-    protected final By bySaveProfileBtn = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileSaveButton");
-    protected final WebElement saveProfileBtnElm;
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileSaveButton")
+    protected WebElement saveProfileBtnElm;
 
-    protected final By byDeleteProfileBtn = AppiumBy
-            .accessibilityId("MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileDeleteButton");
-    protected final WebElement deleteProfileBtnElm;
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileDeleteButton")
+    protected WebElement deleteProfileBtnElm;
 
     public static class SendOptions {
         protected String IPaddr;
@@ -89,17 +81,7 @@ public class WakeOnLanApp {
         this.driver = driver;
         appTitle = this.getTitle();
 
-        titleBarCloseBtnElm = driver.findElement(byTitleBarCloseBtn);
-        closeBtnElm = driver.findElement(byCloseBtn);
-        sendTabElm = driver.findElement(bySendTab);
-        receiveTabElm = driver.findElement(byReceiveTab);
-        IPfieldElm = driver.findElement(byIPfield);
-        MACfieldElm = driver.findElement(byMACfield);
-        portfieldElm = driver.findElement(byPortfield);
-        sendBtnElm = driver.findElement(bySendBtn);
-        profileComboBoxElm = driver.findElement(byProfileComboBox);
-        saveProfileBtnElm = driver.findElement(bySaveProfileBtn);
-        deleteProfileBtnElm = driver.findElement(byDeleteProfileBtn);
+        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
     public String getTitle() {
@@ -224,10 +206,6 @@ public class WakeOnLanApp {
     public void startReceiving() {
         receiveTabElm.click();
 
-        if (startStopBtnElm == null) {
-            startStopBtnElm = driver.findElement(byStartStopBtn);
-        }
-
         if (startStopBtnElm.getAttribute("Name").equals("Start")) {
             startStopBtnElm.click();
         }
@@ -236,10 +214,6 @@ public class WakeOnLanApp {
     public void stopReceiving() {
         receiveTabElm.click();
 
-        if (startStopBtnElm == null) {
-            startStopBtnElm = driver.findElement(byStartStopBtn);
-        }
-
         if (startStopBtnElm.getAttribute("Name").equals("Stop")) {
             startStopBtnElm.click();
         }
@@ -247,10 +221,6 @@ public class WakeOnLanApp {
 
     public String getReceiveOutputText() {
         receiveTabElm.click();
-
-        if (receiveOutputTextField == null) {
-            receiveOutputTextField = driver.findElement(byReceiveOutputTextField);
-        }
 
         return receiveOutputTextField.getText();
     }
