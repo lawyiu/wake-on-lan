@@ -64,6 +64,11 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Minimize all windows before running tests
+        run: |
+          $x = New-Object -ComObject Shell.Application;
+          $x.minimizeall();
+
       - name: Run Appium tests
         run: |
           cd tests/
