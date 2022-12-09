@@ -33,7 +33,7 @@ jobs:
         run: echo SHORT_SHA=$(git rev-parse --short HEAD) >> $env:GITHUB_ENV
 
       - name: Install QT
-        uses: jurplel/install-qt-action@64bdb64f2c14311d23733a8463e5fcbc65e8775e #v3
+        uses: jurplel/install-qt-action@43ec12788e42f375acfcb2cec059edfb9572fbaa #v3
         with:
           version: 6.3.1
           cache: true
