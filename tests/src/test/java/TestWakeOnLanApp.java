@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -86,17 +88,28 @@ class TestWakeOnLanApp {
         assertThrows(NoSuchWindowException.class, () -> app.getTitle());
     }
 
-    @Test
-    void loopbackTest() {
+    @ParameterizedTest(name = "loopbackTest({arguments})")
+    @ValueSource(ints = {0, 7, 8, 9, 65535})
+    void loopbackTest(int port) {
         String loopbackIP = "127.0.0.1";
         String testMAC = "ab:cd:ef:01:23:45";
-        int port = 9;
         String expReceiveText = "Packet received";
 
+        // For testing default port as well
+        if (port != 0) {
+            app.setReceivePort(port);
+        }
         app.startReceiving();
 
-        WakeOnLanApp.SendOptions options = new WakeOnLanApp.SendOptions(loopbackIP, testMAC, port);
-        app.send(options);
+        app.fillInIPfield(loopbackIP);
+        app.fillInMACfield(testMAC);
+
+        // For testing default port as well
+        if (port != 0) {
+            app.fillInPortField(port);
+        }
+
+        app.clickSendButton();
 
         String outputText = app.getReceiveOutputText();
         assertTrue(outputText.contains(expReceiveText),
