@@ -26,6 +26,8 @@ public class WakeOnLanApp {
     @FindBy(xpath= "/Window/Group/Group/Tab/TabItem[2]")
     protected WebElement receiveTabElm;
 
+    // Send page
+
     @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.IP_lineEdit")
     protected WebElement IPfieldElm;
 
@@ -38,12 +40,6 @@ public class WakeOnLanApp {
     @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.sendButton")
     protected WebElement sendBtnElm;
 
-    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.startButton")
-    protected WebElement startStopBtnElm;
-
-    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.packetInfoTextEdit")
-    protected WebElement receiveOutputTextField;
-
     @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileNameComboBox")
     protected WebElement profileComboBoxElm;
 
@@ -52,6 +48,17 @@ public class WakeOnLanApp {
 
     @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_5.profileDeleteButton")
     protected WebElement deleteProfileBtnElm;
+
+    // Receive page
+
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.startButton")
+    protected WebElement startStopBtnElm;
+
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.packetInfoTextEdit")
+    protected WebElement receiveOutputTextField;
+
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.receivePortLineEdit")
+    protected WebElement receivePortFieldElm;
 
     public static class SendOptions {
         protected String IPaddr;
@@ -223,5 +230,17 @@ public class WakeOnLanApp {
         receiveTabElm.click();
 
         return receiveOutputTextField.getText();
+    }
+
+    public void setReceivePort(int port) {
+        receiveTabElm.click();
+        receivePortFieldElm.click();
+        receivePortFieldElm.clear();
+        receivePortFieldElm.sendKeys(String.valueOf(port));
+    }
+
+    public int getReceivePort() {
+        receiveTabElm.click();
+        return Integer.valueOf(receivePortFieldElm.getText());
     }
 }
