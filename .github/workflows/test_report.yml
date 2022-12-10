@@ -8,7 +8,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-    - uses: dorny/test-reporter@0d00bb14cb0cc2c9b8985df6e81dd333188224e1 #v1
+    - uses: dorny/test-reporter@e9fa2f582c0ebbe2e263fd18fad744d52e0b0203 #v1
       with:
         artifact: test-results
         name: JUnit Appium Tests
