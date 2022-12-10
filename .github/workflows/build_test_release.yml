@@ -24,7 +24,7 @@ jobs:
           appium driver install windows
 
       - name: Setup MSVC environment
-        uses: ilammy/msvc-dev-cmd@d8610e2b41c6d0f0c3b4c46dad8df0fd826c68e1 #v1
+        uses: ilammy/msvc-dev-cmd@7315a94840631165970262a99c72cfb48a65d25d #v1.12.0
 
       - name: Check out Git repository
         uses: actions/checkout@v3
