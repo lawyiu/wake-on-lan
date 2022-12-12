@@ -61,6 +61,9 @@ public class WakeOnLanApp {
     @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.receivePortLineEdit")
     protected WebElement receivePortFieldElm;
 
+    @WindowsFindBy(accessibility = "MainWindow.centralWidget.tabWidget.qt_tabwidget_stackedwidget.tab_6.clearButton")
+    protected WebElement receiveClearBtnElm;
+
     public static class SendOptions {
         protected String IPaddr;
         protected String MACaddr;
@@ -275,5 +278,10 @@ public class WakeOnLanApp {
     public int getReceivePort() {
         ensureReceivePage();
         return Integer.valueOf(receivePortFieldElm.getText());
+    }
+
+    public void clickReceiveOutputClearButton() {
+        ensureReceivePage();
+        receiveClearBtnElm.click();
     }
 }
