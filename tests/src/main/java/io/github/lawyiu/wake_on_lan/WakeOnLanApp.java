@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.WindowsFindBy;
@@ -95,28 +96,57 @@ public class WakeOnLanApp {
         return driver.getTitle();
     }
 
+    public boolean isOnSendPage() {
+        try {
+            return sendBtnElm.isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public void ensureSendPage() {
+        if (!isOnSendPage()) {
+            sendTabElm.click();
+        }
+    }
+
+    public boolean isOnReceivePage() {
+        try {
+            return startStopBtnElm.isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public void ensureReceivePage() {
+        if (!isOnReceivePage()) {
+            receiveTabElm.click();
+        }
+    }
+
     public void clickTitleBarCloseButton() {
         titleBarCloseBtnElm.click();
     }
 
     public void clickCloseButton() {
-        sendTabElm.click();
+        ensureSendPage();
         closeBtnElm.click();
     }
 
     public void fillInProfileField(String profileName) {
-        sendTabElm.click();
+        ensureSendPage();
         profileComboBoxElm.click();
         profileComboBoxElm.sendKeys(Keys.CONTROL + "a" + Keys.BACK_SPACE);
         profileComboBoxElm.sendKeys(profileName);
     }
 
     public String getProfileFieldText() {
+        ensureSendPage();
         return profileComboBoxElm.getText();
     }
 
     public void resetProfileFieldToFirstItem() {
-        sendTabElm.click();
+        ensureSendPage();
         profileComboBoxElm.click();
 
         String prevText;
@@ -155,50 +185,53 @@ public class WakeOnLanApp {
     }
 
     public void fillInIPfield(String IPaddr) {
-        sendTabElm.click();
+        ensureSendPage();
         IPfieldElm.clear();
         IPfieldElm.click();
         IPfieldElm.sendKeys(IPaddr);
     }
 
     public String getIPfieldText() {
+        ensureSendPage();
         return IPfieldElm.getText();
     }
 
     public void fillInMACfield(String MACaddr) {
-        sendTabElm.click();
+        ensureSendPage();
         MACfieldElm.clear();
         MACfieldElm.click();
         MACfieldElm.sendKeys(MACaddr);
     }
 
     public String getMACfieldText() {
+        ensureSendPage();
         return MACfieldElm.getText();
     }
 
     public void fillInPortField(int port) {
-        sendTabElm.click();
+        ensureSendPage();
         portfieldElm.clear();
         portfieldElm.click();
         portfieldElm.sendKeys(String.valueOf(port));
     }
 
     public int getPortFieldNumber() {
+        ensureSendPage();
         return Integer.valueOf(portfieldElm.getText());
     }
 
     public void clickSaveProfileButton() {
-        sendTabElm.click();
+        ensureSendPage();
         saveProfileBtnElm.click();
     }
 
     public void clickDeleteProfileButton() {
-        sendTabElm.click();
+        ensureSendPage();
         deleteProfileBtnElm.click();
     }
 
     public void send(SendOptions options) {
-        sendTabElm.click();
+        ensureSendPage();
         fillInIPfield(options.getIPaddr());
         fillInMACfield(options.getMACaddr());
         fillInPortField(options.getPort());
@@ -206,12 +239,12 @@ public class WakeOnLanApp {
     }
 
     public void clickSendButton() {
-        sendTabElm.click();
+        ensureSendPage();
         sendBtnElm.click();
     }
 
     public void startReceiving() {
-        receiveTabElm.click();
+        ensureReceivePage();
 
         if (startStopBtnElm.getAttribute("Name").equals("Start")) {
             startStopBtnElm.click();
@@ -219,7 +252,7 @@ public class WakeOnLanApp {
     }
 
     public void stopReceiving() {
-        receiveTabElm.click();
+        ensureReceivePage();
 
         if (startStopBtnElm.getAttribute("Name").equals("Stop")) {
             startStopBtnElm.click();
@@ -227,20 +260,20 @@ public class WakeOnLanApp {
     }
 
     public String getReceiveOutputText() {
-        receiveTabElm.click();
+        ensureReceivePage();
 
         return receiveOutputTextField.getText();
     }
 
     public void setReceivePort(int port) {
-        receiveTabElm.click();
+        ensureReceivePage();
         receivePortFieldElm.click();
         receivePortFieldElm.clear();
         receivePortFieldElm.sendKeys(String.valueOf(port));
     }
 
     public int getReceivePort() {
-        receiveTabElm.click();
+        ensureReceivePage();
         return Integer.valueOf(receivePortFieldElm.getText());
     }
 }
