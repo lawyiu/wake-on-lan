@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import io.github.lawyiu.wake_on_lan.WakeOnLanApp;
+import io.github.lawyiu.wake_on_lan.WakeOnLanApp.SendOptions;
 import io.github.lawyiu.wake_on_lan.MessageBox;
 
 class TestWakeOnLanApp {
@@ -120,6 +121,29 @@ class TestWakeOnLanApp {
         assertTrue(outputText.contains(expReceiveMAC),
                 String.format("Receive output did not contain \"%s\". Output text is \"%s\".", expReceiveMAC,
                         outputText));
+    }
+
+    @Test
+    void clearButtonShouldClearReceiveOutput() {
+        String loopbackIP = "127.0.0.1";
+        String testMAC = "ab:cd:ef:01:23:45";
+        String expReceiveText = "Packet received";
+        int testPort = 9;
+
+        app.startReceiving();
+
+        SendOptions sendOptions = new SendOptions(loopbackIP, testMAC, testPort);
+        app.send(sendOptions);
+
+        String outputText = app.getReceiveOutputText();
+        assertTrue(outputText.contains(expReceiveText),
+                String.format("Receive output did not contain \"%s\". Output text is \"%s\".", expReceiveText,
+                        outputText));
+
+        app.clickReceiveOutputClearButton();
+
+        outputText = app.getReceiveOutputText();
+        assertTrue(outputText.isEmpty());
     }
 
     @Test
